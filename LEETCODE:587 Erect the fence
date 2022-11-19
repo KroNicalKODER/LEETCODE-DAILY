@@ -1,0 +1,73 @@
+#define ip pair<int,int>
+class Solution {
+public:
+int orientation(ip& p,ip& q,ip& r){
+    int val = (q.second - p.second) * (r.first-q.first) - (q.first-p.first) * (r.second-q.second);
+    if(val==0) return 0;
+    if(val>0) return 1;
+    else return 2;
+}
+bool haveDistance(ip& p,ip& q,ip& r){
+    bool a = p.first<=q.first && p.first>=r.first || p.first>=q.first && p.first<=r.first;
+    bool b = p.second<=q.second && p.second>=r.second || p.second>=q.second && p.second<=r.second;
+    return a&&b;
+}
+vector<ip> makePairs(vector<vector<int>>& poivec){
+    vector<ip> ans;
+    for(int i = 0;i<poivec.size();i++){
+        ans.push_back(make_pair(poivec[i][0],poivec[i][1]));
+    }
+    return ans;
+}
+vector<ip> convexHullJarvis(vector<ip>& Points){
+    int n = Points.size();
+    vector<ip> hull;
+    int l=0;
+    vector<bool> vis(n,false);
+    vector<bool> inHull(n,false);
+    for(int i=1;i<n;i++) if(Points[l].first > Points[i].first) l = i; //LEFTMOST POINT
+    int p=l,q;
+    vis[p] = true;
+    inHull[p] = true;
+    hull.push_back(Points[p]);
+    do{
+        if(inHull[p]==false) hull.push_back(Points[p]);
+        vis[p]=true;
+        inHull[p] = true;
+        q = (p+1)%n;
+        for(int i = 0;i<n;i++){
+            int ori = orientation(Points[p],Points[i],Points[q]);
+            if(ori==2) q = i;
+        }
+        for(int i=0;i<n;i++){
+            if(i!=p&&i!=q&&orientation(Points[p],Points[i],Points[q])==0){
+                if(inHull[i]==false){
+                    hull.push_back(Points[i]);
+                    inHull[i] = true;
+                }
+            }
+        }
+        p = q;
+    }while(p!=l&&vis[p]==false);
+    for(auto itr : hull){
+        cout<<itr.first<<" "<<itr.second<<endl;
+    }
+    return hull;
+}
+vector<vector<int>> makeVector(vector<ip> points){
+    vector<vector<int>> ans;
+    for(auto itr:points){
+        vector<int> temp;
+        temp.push_back(itr.first);
+        temp.push_back(itr.second);
+        ans.push_back(temp);
+    }
+    return ans;
+}
+
+    vector<vector<int>> outerTrees(vector<vector<int>>& trees) {
+        vector<ip> points = makePairs(trees);
+        points = convexHullJarvis(points);
+        return makeVector(points);
+    }
+};
