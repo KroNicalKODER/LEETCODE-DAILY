@@ -1,0 +1,23 @@
+    ListNode* oddEvenList(ListNode* head) {
+        if(head==NULL || head->next==NULL|| head->next->next==NULL) return head;
+        ListNode* odd = head;
+        ListNode* currOdd = odd;
+        ListNode* even = new ListNode;
+        even->val = INT_MIN;
+        ListNode* currEven = even;
+
+        while(currOdd->next!=NULL){
+            ListNode* ev = currOdd->next;
+            currEven->next = ev;
+            currEven = currEven->next;
+            if(currOdd->next->next!=NULL) currOdd->next = currOdd->next->next;
+            else{
+                currEven->next = currOdd->next;
+                break;
+            }
+            currOdd=currOdd->next;
+        }
+        currEven->next = NULL;
+        currOdd->next = even->next;
+        return odd;
+    }
