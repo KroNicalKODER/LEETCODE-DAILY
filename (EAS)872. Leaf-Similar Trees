@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> vec1;
+    vector<int> vec2;
+    void makeLeaf(TreeNode* root,int d){
+        if(root==NULL) return;
+        if(root->left==NULL&&root->right==NULL){
+            if(d==1) vec1.push_back(root->val);
+            else if(d==2) vec2.push_back(root->val);
+        }
+        makeLeaf(root->left,d);
+        makeLeaf(root->right,d);
+    }
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+        makeLeaf(root1,1);
+        makeLeaf(root2,2);
+        cout<<"vec1: ";
+        for(auto itr:vec1) cout<<itr<<" ";
+        cout<<endl;
+        cout<<"vec2: ";
+        for(auto itr:vec2) cout<<itr<<" ";
+        cout<<endl;
+        if(vec1==vec2) return true;
+        return false;
+    }
+};
