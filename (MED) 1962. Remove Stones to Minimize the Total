@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int minStoneSum(vector<int>& piles, int k) {
+        priority_queue<int> heap;
+        for(auto itr:piles){
+            heap.push(itr);
+        }
+        while(k--){
+            int curr = heap.top();
+            heap.pop();
+            curr = curr - (curr/ 2);
+            heap.push(curr);
+        }
+        long long sum = 0;
+        while(!heap.empty()){
+            sum+=heap.top();
+            heap.pop();
+        }
+        return sum;
+    }
+};
