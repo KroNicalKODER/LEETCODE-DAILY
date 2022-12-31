@@ -1,0 +1,61 @@
+class Solution {
+public:
+    int x,y,m,n;
+    bool inRange(int i,int j){
+        if(i >= 0 && i < m && j >= 0 && j < n) return true;
+        return false;
+    }
+    int ans = 0;
+    void solve(vector<vector<int>>& grid,int a,int b,vector<vector<bool>> vis){
+        if(grid[a][b]==2){
+            bool allCovered = true;
+            for(int i=0;i<m;i++){
+                bool tobreak=false;
+                for(int j=0;j<n;j++){
+                    if(grid[i][j]==0 && vis[i][j]==false){
+                        tobreak=true;
+                        allCovered = false;
+                        break;
+                    }
+                }
+                if(tobreak) break;
+            }
+            if(allCovered){
+                ans++;
+            }
+            return;
+        }
+
+        if(vis[a][b]==false){
+            vis[a][b] = true;
+            //GO UP
+            if(inRange(a-1,b)&&(grid[a-1][b]==0||grid[a-1][b]==2)&&vis[a-1][b]==false) solve(grid,a-1,b,vis);
+            //DOWN
+            if(inRange(a+1,b)&&(grid[a+1][b]==0||grid[a+1][b]==2)&&vis[a+1][b]==false) solve(grid,a+1,b,vis);
+            //LEFT
+            if(inRange(a,b-1)&&(grid[a][b-1]==0||grid[a][b-1]==2)&&vis[a][b-1]==false) solve(grid,a,b-1,vis);
+            //RIGHT
+            if(inRange(a,b+1)&&(grid[a][b+1]==0||grid[a][b+1]==2)&&vis[a][b+1]==false) solve(grid,a,b+1,vis);
+        }
+
+    }
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        m = grid.size();
+        n = grid[0].size();
+        for(int i=0;i<m;i++){
+            bool found = false;
+            for(int j=0;j<n;j++){
+                if(grid[i][j]==1){
+                    x = i;
+                    y = j;
+                    found = true;
+                    break;
+                }
+            }
+            if(found) break;
+        }
+        vector<vector<bool>> vis(m,vector<bool>(n, false));
+        solve(grid,x,y,vis);
+        return ans;
+    }
+};
