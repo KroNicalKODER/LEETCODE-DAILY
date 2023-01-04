@@ -1,0 +1,34 @@
+class Solution {
+public:
+
+    int solve(int n){
+        int num3 = n / 3;
+        int num2 = 0;
+        if(n % 3 == 1){
+            num3--;
+            num2 = 2;
+        } else if(n%3==2) {
+            num2 = 1;
+        }
+        return num3 + num2;
+    }
+
+    int minimumRounds(vector<int>& tasks) {
+        map<int,int> memo;
+        int n = tasks.size();
+        for(int i=0;i<n;i++){
+            if(memo.find(tasks[i])==memo.end()){
+                memo[tasks[i]] = 1;
+            }
+            else{
+                memo[tasks[i]]++;
+            }
+        }
+        int ans = 0;
+        for(auto itr : memo){
+            if(itr.second == 1) return -1;
+            ans+=solve(itr.second);
+        }
+        return ans;
+    }
+};
