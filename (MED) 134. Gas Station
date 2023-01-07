@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int gasLeft = 0;
+        int n = gas.size();
+        int ans = 0;
+        bool found = false;
+        vector<bool> vis(n,false);
+        for(int i=0;i<n;i++){
+            gasLeft = 0;
+            bool allT = true;
+            for(int ij=0;ij<n;ij++){
+                if(vis[ij]==false) {
+                    i = ij;
+                    allT = false;
+                    break;
+                }
+            }
+            if(allT) break;
+            for(int j=i;;j++){
+                vis[j] = true;
+                if(j==n) j=0;
+                int amt = gas[j] - cost[j];
+                gasLeft+=amt;
+                if(gasLeft<0 || found) {
+                    i=j;
+                    break;
+                }
+                if(j==i-1 || (i==0 && j==n-1)) found = true;
+            }
+            if(found) {
+                ans = i;
+                return ans;
+            }
+        }
+        return -1;
+    }
+};
