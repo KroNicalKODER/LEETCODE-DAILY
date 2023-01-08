@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        int n = points.size();
+        int ans = 1;
+        for(int i = 0;i<n;i++){
+            map<double,int> mp;
+            for(int j = i+1;j<n;j++){
+                int x1 = points[i][0];
+                int x2 = points[j][0];
+                int y1 = points[i][1];
+                int y2 = points[j][1];
+                double delX = x2-x1;
+                double slope;
+                if(delX==0) slope = INT_MAX;
+                else slope = (y2-y1)/delX;
+                mp[slope]++;
+                ans = max(ans,mp[slope]+1);
+            }
+        }
+        return ans;
+    }
+};
