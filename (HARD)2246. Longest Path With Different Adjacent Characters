@@ -1,0 +1,39 @@
+class Solution {
+public:
+
+    
+
+    void makeGraph(vector<int>& parent,vector<vector<int> >& graph){
+        int n = parent.size();
+        for(int i=1;i<n;i++){
+            graph[parent[i]].push_back(i);
+        }
+    }
+    int ans = INT_MIN;
+    int solve(int par,int curr,string& s,vector<vector<int> >& graph){
+        int first  = 0;
+        int second = 0;
+        for(auto child : graph[curr]){
+                int currPath = solve(curr,child,s,graph);
+                (s[child]!=s[curr]) ? currPath++ : currPath=0;
+                if(currPath > first){
+                    second = first;
+                    first = currPath;
+                } else if(currPath > second) {
+                    second = currPath;
+                }
+
+        }
+        ans = max(ans,first+second+1);
+        return first;
+
+    }
+
+    int longestPath(vector<int>& parent, string s) {
+        int n = parent.size();
+        vector<vector<int> > graph(n);
+        makeGraph(parent,graph);
+        solve(-1,0,s,graph);
+        return ans;
+    }
+};
