@@ -1,0 +1,60 @@
+class Solution {
+public:
+map< int,unordered_set<int> > graph;
+    void makeGraph(vector<vector<int>>& edges){
+        int n = edges.size();
+        for(int i=0;i<n;i++){
+            graph[edges[i][0]].insert(edges[i][1]);
+            graph[edges[i][1]].insert(edges[i][0]);
+        }
+    }
+
+    vector<int> solve(string labels,int curr,vector<int> &ansvec,vector<bool>& vis){
+        vector<int> count(26,0);
+        for(auto child:graph[curr]){
+            if(!vis[child]){
+                vis[child] = true;
+                vector<int> tmp = solve(labels,child,ansvec,vis);
+                for(int i=0;i<26;i++){
+                    count[i]+=tmp[i];
+                }
+            }
+        }
+        char ch = labels[curr];
+        count[ch-'a']++;
+        ansvec[curr] = count[ch-'a'];
+        return count;
+    }
+
+    vector<int> countSubTrees(int n, vector<vector<int>>& edges, string labels) {
+        makeGraph(edges);
+        vector<vector<int>> count(n, vector<int>(26));
+        queue<int> qu;
+
+        for (int curr = 0; curr < n; ++curr) {
+            count[curr][labels[curr] - 'a'] = 1;
+            if (curr != 0 && graph[curr].size() == 1) {
+                qu.push(curr);
+            }
+        }
+
+        while (qu.size()) {
+            int curr = qu.front();
+            qu.pop();
+            int parent = *graph[curr].begin();
+            graph[parent].erase(curr);
+            for (int i = 0; i < 26; ++i) {
+                count[parent][i] += count[curr][i];
+            }
+            if (parent != 0 && graph[parent].size() == 1) {
+                qu.push(parent);
+            }
+        }
+
+        vector<int> ans(n);
+        for (int curr = 0; curr < n; ++curr) {
+            ans[curr] = count[curr][labels[curr] - 'a'];
+        }
+        return ans;
+    }
+};
