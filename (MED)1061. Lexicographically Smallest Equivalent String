@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<int>par;
+    int getPar(int x){
+        if(par[x] == -1){return x;}
+
+        return par[x] = getPar(par[x]);
+    }
+
+    void Union(int x,int y){
+        int parX = getPar(x);
+        int parY = getPar(y);
+        if(parX == parY) return;
+        par[max(parX,parY)] = min(parX,parY);
+    }
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        par.resize(26,-1);
+        for(int i=0;i<s1.size();i++){
+            Union(s1[i]-'a',s2[i]-'a');
+        }
+        
+       for(auto i=0;i<baseStr.size();i++)
+            baseStr[i]=getPar(baseStr[i]-'a')+'a';
+
+        return baseStr;
+    }
+};
