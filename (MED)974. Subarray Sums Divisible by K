@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& nums, int k) {
+        int n = nums.size();
+        int currMod = 0;
+        int ans = 0;
+        vector<int> modEle(k,0);
+        modEle[0] = 1;
+        for(int i=0;i<n;i++){
+            currMod = (((currMod + nums[i]) % k) + k) % k;
+            ans += modEle[currMod];
+            modEle[currMod]++;
+        }
+        
+        return ans;
+    }
+};
