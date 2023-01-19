@@ -1,0 +1,41 @@
+class Solution {
+    vector<map<int, int>> mp;
+    vector<vector<int>> graph;
+    vector<int> found;
+    
+public:
+    int numberOfGoodPaths(vector<int>& vals, vector<vector<int>>& edges) {
+        int n = vals.size();
+        mp.resize(n);
+        graph.resize(n);
+        for (auto &child: edges) {
+            graph[child[0]].push_back(child[1]);
+            graph[child[1]].push_back(child[0]);
+        }
+        int ans = 0;
+        found.resize(n, 0);
+        solve(ans, 0, vals);   
+        return ans+n;
+    }
+    void solve(int &count, int u, vector<int>& vals) {
+        found[u] = 1;
+        for (auto &child: graph[u]) {
+            if (found[child] == 1) 
+                continue;
+            int cnt = 0;
+            solve(cnt, child, vals);
+            count += cnt;
+            auto it = mp[child].lower_bound(vals[u]);
+            mp[child].erase(mp[child].begin(), it);
+            if (mp[u].size() < mp[child].size()) {
+                swap(mp[u], mp[child]);    
+            }   
+            for (auto &it: mp[child]) {
+                count += mp[u][it.first] * it.second;
+                mp[u][it.first] += it.second;
+            }
+        }
+        count += mp[u][vals[u]];
+        ++mp[u][vals[u]];
+    }
+};
