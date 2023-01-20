@@ -1,0 +1,24 @@
+class Solution {
+public:
+    set<vector<int>> ans;
+    void solve(vector<int>& nums,int n,int start,int index,vector<int>& temp){
+        if(index>=n){
+            if(temp.size() > 1) ans.insert(temp);
+            return;
+        }
+        int ts = temp.size();
+
+        if(ts==0 || temp[ts-1] <= nums[index]){
+            temp.push_back(nums[index]);
+            solve(nums,n,start,start+index+1,temp);
+            temp.pop_back();
+        }
+        solve(nums,n,start,start+index+1,temp);
+    }
+
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        vector<int> temp;
+        solve(nums,nums.size(),0,0,temp);
+        return vector(ans.begin(),ans.end());
+    }
+};
