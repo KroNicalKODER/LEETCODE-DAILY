@@ -1,0 +1,39 @@
+class Solution {
+public:
+
+    void solve(vector<string>& ansVec,vector<string>& ans,string s,int index,int n){
+        if(index == n && ansVec.size()==4){
+            string tempStr = ansVec[0] + '.' + ansVec[1] + '.' + ansVec[2] + '.' + ansVec[3];
+            ans.push_back(tempStr);
+            return;
+        }
+        string temp = "";
+        for(int i=index;i<n && ansVec.size() < 4;i++){
+            if(s[i]-'0' > 9) continue;
+            temp += s[i];
+            int numm = stoi(temp);
+            if(numm >= 0 && numm <= 255){
+                if(temp[0]=='0'){
+                    if(temp.size()==1){
+                        ansVec.push_back(temp);
+                        solve(ansVec,ans,s,i+1,n);
+                        ansVec.pop_back();        
+                    }
+                }else{
+                    ansVec.push_back(temp);
+                    solve(ansVec,ans,s,i+1,n);
+                    ansVec.pop_back();
+                }
+            }
+            if(numm<0 || numm > 255) break;
+        }
+    }
+
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> ans;
+        vector<string> ansVec;
+        if(s.length() > 12) return ans;
+        solve(ansVec,ans,s,0,s.length()) ;
+        return ans;     
+    }
+};
