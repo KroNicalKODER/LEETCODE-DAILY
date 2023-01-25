@@ -1,0 +1,46 @@
+class Solution {
+public:
+    
+    void makeNode(int par[],int &node,vector<int>& edges){
+        int curr = node;
+        int move = 0;
+        par[curr] = 0;
+        queue<int> qu;
+        vector<bool> vis(edges.size(),false);
+        qu.push(curr);
+        while (!qu.empty()) {
+            int node = qu.front();
+            qu.pop();
+            if (vis[node]) continue;
+            vis[node] = true;
+            int child = edges[node];
+            if (child != -1 && !vis[child]) {
+                par[child] = 1 + par[node];
+                qu.push(child);
+            }
+        }
+        
+    }
+
+    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        int n = edges.size();
+        int frmN1[n+1];
+        int frmN2[n+1];
+        for(int i=0;i<=n;i++){
+            frmN1[i] = INT_MAX;
+            frmN2[i] = INT_MAX;
+        }
+        makeNode(frmN1,node1,edges);
+        makeNode(frmN2,node2,edges);
+        int ans = -1;
+        int temp = INT_MAX;
+        for(int i=0;i<n;i++){
+            int curr = max(frmN1[i],frmN2[i]);
+            if(curr < temp){
+                temp = curr;
+                ans = max(ans,i);
+            }
+        }
+        return ans;
+    }
+};
