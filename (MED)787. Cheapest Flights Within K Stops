@@ -1,0 +1,29 @@
+class Solution {
+public:
+
+    void makeGraph(vector<vector<pair<int,int>>>& graph,vector<vector<int>>& flights) {
+        for(int i=0;i<flights.size();i++)
+            graph[flights[i][0]].push_back(make_pair(flights[i][1],flights[i][2]));
+        
+    }
+
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        vector<vector<pair<int,int>>> graph(n);
+        int ans = 0;
+        makeGraph(graph,flights);
+        vector<int> distFrmSrc(n, INT_MAX);
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+        pq.push({0,src,0});
+        while(!pq.empty()){
+            auto vec = pq.top();
+            pq.pop();
+            if(vec[2] > distFrmSrc[vec[1]] || vec[2] > k+1) continue;
+            distFrmSrc[vec[1]] = vec[2];
+            if (vec[1] == dst) return vec[0];
+            for (auto& [child, price] : graph[vec[1]]) {
+                pq.push({vec[0] + price, child, vec[2] + 1});
+            }
+        }
+        return -1;
+    }
+};
