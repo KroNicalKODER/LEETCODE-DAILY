@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class myComparator
+{
+public:
+    int operator() (const ListNode* p1, const ListNode* p2)
+    {
+
+        if((p1==NULL && p2==NULL) || p2 == NULL) return 0;
+        if(p1 == NULL && p2 != NULL) return 1;
+        return p1->val > p2->val;
+    }
+};
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue <ListNode*, vector<ListNode*>, myComparator > pq;
+        map<ListNode*,int> nodeToIndex;
+        if(lists.size()==0) return NULL;
+        //PUSHING ALL FIRST ELEMENTS
+        int len = lists.size();
+        for(int i=0;i<len;i++){
+            if(lists[i]==NULL) continue;
+            pq.push(lists[i]);
+            nodeToIndex[lists[i]] = i;
+        }
+        ListNode* head = new ListNode(-1);
+        ListNode* curr = head;
+        while(!pq.empty()) {
+            ListNode* pqtop = pq.top();
+            pq.pop();
+            if(pqtop == NULL || pqtop->val==INT_MAX) continue;
+            int listIndex = nodeToIndex[pqtop];
+            nodeToIndex.erase(pqtop);
+
+            if(lists[listIndex] != NULL){
+                lists[listIndex] = lists[listIndex]->next;
+                nodeToIndex[lists[listIndex]] = listIndex;
+                pq.push(lists[listIndex]);
+            }
+
+            pqtop->next = NULL;
+            curr->next = pqtop;
+            curr = curr->next;
+        }
+        return head->next;
+    }
+};
