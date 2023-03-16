@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void nodeToIndFunc(map<int,int>& nodeToInd,vector<int>& vec) {
+        for(int i=0;i<vec.size();i++) {
+            nodeToInd[vec[i]] = i;
+        }
+    }
+    TreeNode* solve(vector<int>& inorder,vector<int>& postorder,int instart,int inend,int &postInd,map<int,int>& nodeToInd){
+        if(postInd < 0 || (instart > inend)) return NULL;
+         TreeNode* curr = new TreeNode(postorder[postInd--]);
+
+         int ind = nodeToInd[curr->val];
+
+         curr->right = solve(inorder,postorder,ind+1,inend,postInd,nodeToInd);
+         curr->left = solve(inorder,postorder,instart,ind-1,postInd,nodeToInd);
+         return curr;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        int postInd = postorder.size()-1;
+        map<int,int> nodeToInd;
+        nodeToIndFunc(nodeToInd,inorder);
+        return solve(inorder,postorder,0,inorder.size()-1,postInd,nodeToInd);
+    }
+};
