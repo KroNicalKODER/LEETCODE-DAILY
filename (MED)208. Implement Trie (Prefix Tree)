@@ -1,0 +1,33 @@
+class Trie {
+public:
+    set<string> strs;
+    Trie() {
+    }
+    
+    void insert(string word) {
+        strs.insert(word);
+    }
+    
+    bool search(string word) {
+        if(strs.find(word) != strs.end()) return true;
+        else return false;
+    }
+    
+    bool startsWith(string prefix) {
+        auto itr = strs.lower_bound(prefix);
+        if(itr == strs.end()) return false;
+
+        for(int i=0;i<prefix.size();i++){
+            if(prefix[i]!=(*itr)[i]) return false;
+        }
+        return true;
+    }
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */
