@@ -1,0 +1,59 @@
+class Trie{
+public:
+    bool comp;
+    Trie* child[26];
+    Trie() {
+        comp = false; 
+        memset(child, 0, sizeof(child));
+    }
+};
+
+class WordDictionary {
+public:
+    Trie* root;
+
+    WordDictionary() {
+        root = new Trie();
+    }
+    
+
+    void addWord(string word) {
+
+        Trie* trieNode = root;
+        for (char ch : word){
+            int ind = ch - 'a';
+            if(trieNode->child[ind]==NULL) 
+                trieNode->child[ind] = new Trie();
+            trieNode = trieNode->child[ind];
+        }
+        trieNode->comp = true;
+    }
+
+
+    bool search(string word) {
+        return searchUtil(word, root);
+    }
+
+
+    bool searchUtil(string word, Trie* trieNode){
+
+        for(int i=0;i<word.length();i++){
+            char ch = word[i];
+            if(ch == '.'){
+                for(auto c: trieNode->child)
+                    if(c && searchUtil(word.substr(i+1), c)) return true;
+                return false;
+            }
+            int ind = ch - 'a';
+            if(trieNode->child[ind]==NULL) return false;
+            trieNode = trieNode->child[ind];
+        }
+        return trieNode->comp;
+    }
+};
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
