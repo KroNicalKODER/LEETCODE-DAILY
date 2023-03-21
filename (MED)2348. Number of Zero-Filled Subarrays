@@ -1,0 +1,22 @@
+class Solution {
+public:
+    long long zeroFilledSubarray(vector<int>& nums) {
+        long long ans = 0;
+        long long temp = 0;
+        int n = nums.size();
+        for(int i=0;i<n;i++) {
+            temp=0;
+            while(i < n && nums[i] == 0) {
+                temp++;
+                i++;
+            }if(temp!=0) i--;
+            if(temp & 1){
+                ans += ((temp + 1) / 2) * temp;
+            } else {
+                ans += (temp / 2) * (temp + 1);
+            }
+         }
+        
+         return ans;
+    }
+};
