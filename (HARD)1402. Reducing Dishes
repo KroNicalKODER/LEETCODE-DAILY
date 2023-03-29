@@ -1,0 +1,24 @@
+class Solution {
+public:
+
+    int solve(vector<int>& satis,int index,int n,int time,vector<vector<int>>& dp){
+        if(index >= n) return 0;
+
+        if(dp[index][time]!=-1) return dp[index][time];
+
+        int inc = (time * satis[index]) + solve(satis,index+1,n,time+1,dp);
+
+        int exc = solve(satis,index+1,n,time,dp);
+
+        return dp[index][time] = max(inc,exc);
+
+    }
+
+    int maxSatisfaction(vector<int>& satis) {
+        int n = satis.size();
+
+        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));        
+        sort(satis.begin(),satis.end());
+        return solve(satis,0,n,1,dp);        
+    }
+};
