@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int minimizeArrayValue(vector<int>& nums){
+        int ans = INT_MIN;
+        long long int sum = nums[0];
+        int i;
+        for(i=1;i<nums.size();i++) {
+            if(sum % (i) == 0) ans = ((ans) > (sum / i) ) ? ans : (sum/i);
+            else ans = (ans > (sum / (i) ) + 1) ? ans : (sum / (i) ) + 1;
+            sum+=nums[i];
+        }
+        if(sum % (i) == 0) ans = ((ans) > (sum / i) ) ? ans : (sum/i);
+            else ans = (ans > (sum / (i) ) + 1) ? ans : (sum / (i) ) + 1;
+        return ans;
+    } 
+};
